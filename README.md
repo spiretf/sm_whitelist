@@ -4,6 +4,8 @@ Download and execute whitelists from [whitelist.tf](http://whitelist.tf/)
 
 ## Installation
 
+[Download Plugin](https://github.com/spiretf/sm_whitelist/raw/master/plugin/whitelisttf.smx)
+
 Requires [`curl`](https://forums.alliedmods.net/showthread.php?t=152216)
 
 ## Usage
