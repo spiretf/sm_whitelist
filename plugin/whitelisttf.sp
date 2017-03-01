@@ -8,7 +8,7 @@ public Plugin:myinfo =
 	name = "whitelist.tf downloader",
 	author = "Icewind",
 	description = "Download whitelists from whitelist.tf",
-	version = "0.1",
+	version = "0.2",
 	url = "https://whitelist.tf"
 };
 
