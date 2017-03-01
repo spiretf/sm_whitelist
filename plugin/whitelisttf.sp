@@ -36,6 +36,7 @@ public OnPluginStart()
 	g_hCvarUrl = CreateConVar("sm_whitelist_tf_base", "http://whitelist.tf/download", "whitelist.tf download endpoint", FCVAR_PROTECTED);
 
 	RegConsoleCmd("sm_whitelist_id", DownloadWhiteListAction, "Download and execute a whitelist");
+	RegConsoleCmd("tftrue_whitelist_id", DownloadWhiteListAction, "Download and execute a whitelist");
 }
 
 public Action:DownloadWhiteListAction(client, args)
