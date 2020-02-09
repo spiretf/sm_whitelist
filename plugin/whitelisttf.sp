@@ -77,13 +77,10 @@ public DownloadWhiteList(String:whiteListId[128], bool:exec) {
 
 public onComplete(Handle:hndl, CURLcode:code) {
 	CloseHandle(hndl);
-	if(code != CURLE_OK)
-	{
+	if(code != CURLE_OK) {
 		PrintToChatAll("Error downloading whitelist %s", lastId);
 		PrintToChatAll("cURLCode error: %d", code);
-	}
-	else
-	{
+	} else {
 		decl String:targetPath[128];
 		Format(targetPath, sizeof(targetPath), "cfg/%s.txt", lastId);
 		if(execLast) {
