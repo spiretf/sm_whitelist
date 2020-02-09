@@ -3,8 +3,7 @@
 #include <cURL>
 #include <tf2>
 
-public Plugin:myinfo =
-{
+public Plugin:myinfo = {
 	name = "whitelist.tf downloader",
 	author = "Icewind",
 	description = "Download whitelists from whitelist.tf",
@@ -31,16 +30,14 @@ new Handle:output_file = INVALID_HANDLE;
 new String:lastId[128] = "";
 new bool:execLast = true;
 
-public OnPluginStart()
-{
+public OnPluginStart() {
 	g_hCvarUrl = CreateConVar("sm_whitelist_tf_base", "http://whitelist.tf/download", "whitelist.tf download endpoint", FCVAR_PROTECTED);
 
 	RegConsoleCmd("sm_whitelist_id", DownloadWhiteListAction, "Download and execute a whitelist");
 	RegConsoleCmd("tftrue_whitelist_id", DownloadWhiteListAction, "Download and execute a whitelist");
 }
 
-public Action:DownloadWhiteListAction(client, args)
-{
+public Action:DownloadWhiteListAction(client, args) {
 	new String:arg[128];
 	
 	if(args != 1) {
@@ -58,8 +55,7 @@ public Action:DownloadWhiteListAction(client, args)
 	return Plugin_Handled;
 }
 
-public DownloadWhiteList(String:whiteListId[128], bool:exec)
-{
+public DownloadWhiteList(String:whiteListId[128], bool:exec) {
 	execLast = exec;
 	lastId = whiteListId;
 	decl String:fullUrl[512];
@@ -79,8 +75,7 @@ public DownloadWhiteList(String:whiteListId[128], bool:exec)
 	curl_easy_perform_thread(curl, onComplete);
 }
 
-public onComplete(Handle:hndl, CURLcode:code)
-{
+public onComplete(Handle:hndl, CURLcode:code) {
 	CloseHandle(hndl);
 	if(code != CURLE_OK)
 	{
@@ -98,8 +93,7 @@ public onComplete(Handle:hndl, CURLcode:code)
 	return;
 }
 
-public execWhiteList(String:whitelist[128])
-{
+public execWhiteList(String:whitelist[128]) {
 	decl String:command[512];
 	PrintToChatAll("Whitelist loaded");
 	Format(command, sizeof(command), "mp_tournament_whitelist %s", whitelist);
