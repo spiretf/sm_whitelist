@@ -25,10 +25,6 @@ new CURL_Default_opt[][2] = {
 #define CURL_DEFAULT_OPT(%1) curl_easy_setopt_int_array(%1, CURL_Default_opt, sizeof(CURL_Default_opt))
 
 new Handle:g_hCvarUrl = INVALID_HANDLE;
-new Handle:output_file = INVALID_HANDLE;
-
-new String:lastId[128] = "";
-new bool:execLast = true;
 
 public OnPluginStart() {
 	g_hCvarUrl = CreateConVar("sm_whitelist_tf_base", "http://whitelist.tf/download", "whitelist.tf download endpoint", FCVAR_PROTECTED);
@@ -56,8 +52,6 @@ public Action:DownloadWhiteListAction(client, args) {
 }
 
 public DownloadWhiteList(String:whiteListId[128], bool:exec) {
-	execLast = exec;
-	lastId = whiteListId;
 	decl String:fullUrl[512];
 	decl String:targetPath[128];
 	decl String:BaseUrl[128];
@@ -69,21 +63,37 @@ public DownloadWhiteList(String:whiteListId[128], bool:exec) {
 	
 	Format(targetPath, sizeof(targetPath), "cfg/%s.txt", whiteListId);
 
+	new Handle:output_file = INVALID_HANDLE;
+
 	output_file = curl_OpenFile(targetPath, "w");
+
+	new Handle:hDLPack = CreateDataPack();
+	WritePackCell(hDLPack, _:output_file);
+	WritePackString(hDLPack, whiteListId);
+	WritePackCell(hDLPack, exec);
+
 	curl_easy_setopt_handle(curl, CURLOPT_WRITEDATA, output_file);
 	curl_easy_setopt_string(curl, CURLOPT_URL, fullUrl);
-	curl_easy_perform_thread(curl, onComplete);
+	curl_easy_perform_thread(curl, onComplete, hDLPack);
 }
 
-public onComplete(Handle:hndl, CURLcode:code) {
+public onComplete(Handle:hndl, CURLcode:code, any hDLPack) {
+	decl String:whiteListId[128];
+
+	ResetPack(hDLPack);
+	CloseHandle(Handle:ReadPackCell(hDLPack)); // output_file
+	ReadPackString(hDLPack, whiteListId, sizeof(whiteListId));
+	bool exec = ReadPackCell(hDLPack);
+
+	CloseHandle(hDLPack);
 	CloseHandle(hndl);
+
 	if(code != CURLE_OK) {
-		PrintToChatAll("Error downloading whitelist %s", lastId);
+		PrintToChatAll("Error downloading whitelist %s", whiteListId);
 		PrintToChatAll("cURLCode error: %d", code);
 	} else {
 		decl String:targetPath[128];
-		Format(targetPath, sizeof(targetPath), "cfg/%s.txt", lastId);
-		if(execLast) {
+		if(exec) {
 			execWhiteList(targetPath);
 		}
 	}
