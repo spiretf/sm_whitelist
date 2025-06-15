@@ -1,3 +1,5 @@
+# Moved to https://codeberg.org/spire/sm_whitelist
+
 # Sourcemod Whitelist Downloader
 
 Download and execute whitelists from [whitelist.tf](http://whitelist.tf/)
